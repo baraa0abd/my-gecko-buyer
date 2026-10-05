@@ -1,0 +1,13 @@
+{
+  "ask": "one general-admission ticket",
+  "step": "check",
+  "field": "product",
+  "asked": "General admission ticket",
+  "found": "VIP ticket",
+  "where": "prepared",
+  "note": "",
+  "signed": false,
+  "intent": "intents\\20261005T065731.847909-one-general-admission-ticket.json",
+  "source": "recorded",
+  "at": "2026-10-05T06:57:31.878012+00:00"
+}

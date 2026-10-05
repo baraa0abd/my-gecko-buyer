@@ -1,48 +1,40 @@
-# The buyer signs only when <N> fields match the pinned intent
-
-*Your first decision record. Fill every section, keep the headings. The table's rows are
-the seven fields `buyer/check.py` compares, plus the signed-bytes step; say in your own
-words how and why for each one. Delete these italic lines when you are done.*
+# The buyer signs only when seven fields match the pinned intent
 
 ## Status and date
 
-proposed | accepted, YYYY-MM-DD
+accepted, 2026-10-05
 
 ## Context
 
-My buyer holds a key that can pay. Gecko prepares the bytes; I sign them. What would a
-wrong transaction cost, and which past incident shows it? (one number)
+The buyer controls a key that can move the full pinned budget. Gecko prepares unsigned bytes, so the buyer must independently decide whether those bytes express the pinned request.
 
 ## Decision
 
-Before signing, the buyer compares these fields of the prepared transaction with
-`intents/<file>.json` and refuses on the first mismatch, naming the field and both values:
+Before signing, compare the prepared transaction with `intents/<file>.json` and refuse on the first mismatch, naming both values.
 
 | Field | Compared how | Why this one |
 |---|---|---|
-| program | address equality, and no other program riding along | |
-| store | address, derived from `['receipts', name]`, never a constant | |
-| product | | |
-| price_raw | integer, at or under the pinned budget | |
-| mint | address, never the symbol | |
-| quantity | integer | |
-| destination | the store authority's token account for the pinned mint | |
-| signed bytes | `verify_signed_transaction` before `submit_transaction` | |
+| program | exact IDL program address; no extra non-plumbing program | prevents a substituted instruction or hidden program call |
+| store | PDA derived from the pinned store name | rejects similar names and swapped store accounts |
+| product | exact product string | prevents a different item, including VIP-for-general-admission substitution |
+| price_raw | whole integer at or below budget | caps the amount that may leave the buyer |
+| mint | exact address | token symbols are labels and cannot identify an asset |
+| quantity | exact integer | one prepared unit cannot satisfy a request for two |
+| destination | derived authority token account for the pinned mint | prevents payment redirection |
+| signed bytes | Gecko verification before submission | catches signer substitution and tampering |
 
 ## What this forbids
 
-Signing on a partial match. Retrying a refusal unchanged. Signing without a passed
-simulation. (Add what YOUR design forbids.)
+No partial matches, floating-point prices, symbol-based mint checks, unchanged retries after refusal, signing without a passing simulation, signing stale bytes, re-signing a retry, or submitting before signed-byte verification.
 
 ## What I left out, and why
 
-The field I chose not to check, and the risk I accept by not checking it.
+The buyer does not infer the person's real-world intent beyond the small parser. The pin is the boundary; adding model inference would make the decision less deterministic.
 
 ## What would reverse this
 
-The observation that would make me drop or add a field. Example: "if Gecko's verify
-already binds price and mint, my own price check is duplicate work, and I drop it."
+A verified protocol binding that cryptographically covers a field and is enforced by the signer could make the duplicate local check unnecessary. Removal requires an adversarial regression test showing the signer still refuses a substituted value.
 
 ## What this does not prove
 
-That my pin was right. The buyer faithfully signs a wrong request.
+That the pin was right. The buyer faithfully signs a wrong request.

@@ -10,13 +10,13 @@ moved) or a **refusal** (it did not sign, and this is the field that disagreed).
 
 | Min | On screen | Backed by | What I say |
 |---|---|---|---|
-| 0:00 | your README's first lines: the sentence and the explorer link | `README.md` | |
-| 0:45 | your assistant with Gecko connected: `list_stores` shows *your* store | `docs/connect.md`, `store/store.json` | |
-| 1:30 | the live buy: pin, prepare, 7 ticks, sign, verify, submit | `uv run buyer "one espresso" --devnet` | |
-| 2:30 | the landing: the explorer, then the receipt with ledger deltas | `receipts/<sig8>.md` | |
-| 3:15 | **the injected failure**: the judge draws a card; your buyer refuses and signs nothing | `buyer/check.py`, `refusals/` | |
-| 4:30 | tests and the five-case table; one test that was red first | `uv run pytest`, `docs/EVAL_REPORT.md` | |
-| 5:15 | the ADR: the decision, and what would reverse it | `docs/adr/0001-refusals-before-signing.md` | |
+| 0:00 | README and recorded-mode status | `README.md` | This buyer pays only when seven fields match its immutable pin; today I am showing recorded evidence honestly, with no devnet landing claim. |
+| 0:45 | Gecko menu boundary | `docs/connect.md`, `store/store.json` | The menu is read before bytes exist. Product names are data, so the latte text cannot change the budget. |
+| 1:30 | pin, prepare, seven checks, sign, verify, submit | `uv run buyer "one espresso" --recorded` | The pin is on disk first. The prepared bytes pass seven independent comparisons before the recorded signer can run. |
+| 2:30 | recorded receipt and ledger deltas | `receipts/<sig8>.md` | A receipt comes from two ledger snapshots. Recorded evidence proves the loop, while only a devnet signature and explorer link would prove a live landing. |
+| 3:15 | injected failure card | `buyer/check.py`, `refusals/` | The first mismatched field names asked and found values. Nothing signs for product, mint, price, quantity, destination, stale, or tampered bytes. |
+| 4:30 | tests, cases, and rollback | `uv run pytest`, `docs/EVAL_REPORT.md` | The six cases and four cards rerun offline. The secret scanner is part of the same release check. |
+| 5:15 | refusal ADR | `docs/adr/0001-refusals-before-signing.md` | I chose checks before signing because refusal is free. I would remove a duplicate only after signer-enforced binding and adversarial regression evidence. |
 
 The **finalists** (the students presenting on Friday, named by the instructor) may do
 minute 1:30 on mainnet against geckocoffee instead, with a registered, funded wallet (see

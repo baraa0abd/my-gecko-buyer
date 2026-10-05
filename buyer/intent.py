@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from .check import NotYetWritten
+from .check import Refused, refuse
 
 
 @dataclass(frozen=True)
@@ -106,7 +106,37 @@ def parse_intent(ask: str, menu: Menu, context: Context) -> IntentRecord:
 
     Fill every field of `IntentRecord` except `pinned_at`, which stamps itself.
     """
-    raise NotYetWritten("parse_intent", "buyer/intent.py: turn the ask into an IntentRecord")
+    lowered = ask.casefold()
+    quantity = 2 if re.search(r"\btwo\b|^\s*2\b", lowered) else 1
+    aliases = (
+        ("espresso", "Espresso"),
+        ("general-admission", "General admission ticket"),
+        ("general admission", "General admission ticket"),
+        ("module 3", "Module 3"),
+        ("tip", "Tip"),
+        ("beans", "Beans"),
+        ("latte", "Latte"),
+    )
+    requested = next((product for phrase, product in aliases if phrase in lowered), None)
+    if requested is None:
+        raise Refused(refuse("product", "a product named in the ask", ask, where="ask"))
+
+    exact = next((item for item in menu.products if item.name == requested), None)
+    decimals = exact.decimals if exact is not None else 6
+    cap = re.search(r"\bup\s+to\s+(\d+)\b", lowered)
+    budget_raw = int(cap.group(1)) * 10**decimals if cap else context.budget_raw
+    return IntentRecord(
+        ask=ask,
+        store=context.store,
+        product=requested,
+        quantity=quantity,
+        budget_raw=budget_raw,
+        mint=context.pay_mint,
+        buyer=context.buyer,
+        network=context.network,
+        store_authority=menu.authority,
+        menu_price_raw=exact.price_raw if exact is not None else None,
+    )
 
 
 def slug(text: str) -> str:

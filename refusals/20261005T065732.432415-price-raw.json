@@ -1,0 +1,13 @@
+{
+  "ask": "one espresso",
+  "step": "check",
+  "field": "price_raw",
+  "asked": 500000,
+  "found": 1000000,
+  "where": "prepared",
+  "note": "",
+  "signed": false,
+  "intent": "intents\\20261005T065732.402490-one-espresso.json",
+  "source": "recorded",
+  "at": "2026-10-05T06:57:32.436964+00:00"
+}

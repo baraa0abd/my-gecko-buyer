@@ -1,16 +1,19 @@
 # Issues
 
-*Real incidents from your week, newest first. Thursday's project 04 needs at least one
-that actually happened on devnet (not one you invented). The top three are what you would
-bring up on Friday if asked "what went wrong".*
+## 2026-10-05: dependency sync could not reach PyPI in the sandbox
 
-*One entry per incident, in this shape. Delete this italic block when you have one.*
+- **What I saw:** `uv sync` failed while fetching `https://pypi.org/simple/hatchling/` with `No such host is known`.
+- **What was actually wrong:** the restricted execution environment had no DNS/network access for PyPI; the buyer logic had not run yet.
+- **How I found it:** the resolver named the failed build dependency and URL directly.
+- **What I changed:** kept all work in recorded mode, ran the repository key scanner independently, and deferred execution until the locked dependencies could be installed.
+- **What it cost:** time only; no key was loaded, no transaction was prepared, signed, or submitted.
+- **Would the checks have caught it?** This happens before the seven purchase checks. The fail-closed runner cannot sign because it cannot start.
 
-## YYYY-MM-DD: <what broke, in one line>
+## 2026-10-05: a protected GitHub email blocked a push
 
-- **What I saw:** the exact output, pasted, and the command that printed it.
-- **What was actually wrong:** the cause, once you knew it. Not the first guess.
-- **How I found it:** the read, the log line or the test that showed it.
-- **What I changed:** the commit, and the test that is now red if it comes back.
-- **What it cost:** time, devnet SOL, a signature that landed wrong, or nothing.
-- **Would the checks have caught it?** Which field, or "no, and here is why".
+- **What I saw:** GitHub returned `GH007: Your push would publish a private email address`.
+- **What was actually wrong:** the local commit identity used the account email rather than the GitHub noreply address.
+- **How I found it:** `git log --format` showed the author and committer emails.
+- **What I changed:** configured the repository to use the GitHub noreply identity before committing.
+- **What it cost:** no transaction or funds; one rejected Git push.
+- **Would the checks have caught it?** No purchase field applies; this is repository delivery metadata.

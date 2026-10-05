@@ -1,0 +1,13 @@
+{
+  "ask": "one espresso",
+  "step": "sign",
+  "field": "blockhash",
+  "asked": "height <= 492608728",
+  "found": 492608729,
+  "where": "signer",
+  "note": "stale bytes: prepare again, never re-sign",
+  "signed": false,
+  "intent": "intents\\20261005T065732.468994-one-espresso.json",
+  "source": "recorded",
+  "at": "2026-10-05T06:57:32.497361+00:00"
+}

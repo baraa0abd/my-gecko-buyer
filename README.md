@@ -1,4 +1,20 @@
-# Dev3Pack Gecko capstone: a buyer that pays, or says why not
+# Gecko buyer: checked purchases or field-specific refusals
+
+This recorded-mode buyer pins the request before preparing a purchase, validates all
+seven transaction fields, verifies signed bytes before submission, and writes either a
+reconciled receipt or a refusal naming the mismatched field. The submitted evidence is
+explicitly marked `source: recorded`; no live devnet purchase or deployment is claimed.
+
+Recorded receipt example:
+[`receipts/4yc7jA8L.json`](receipts/4yc7jA8L.json). Recorded smoke evaluation:
+[`smoke-report.json`](smoke-report.json).
+
+The implementation covers the offline capstone path and its safety boundary: store and
+menu text are treated as untrusted data, mismatches stop before signing, stale prepared
+bytes are refused, altered signed bytes are refused, and the MCP fetch guard accepts
+only HTTPS hosts whose resolved addresses are globally routable.
+
+# Dev3Pack Gecko capstone reference
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![uv](https://img.shields.io/badge/uv-managed-6e56cf)
